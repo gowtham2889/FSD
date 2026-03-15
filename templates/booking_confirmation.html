@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmed — SuperCars{% endblock %}
+
+{% block content %}
+<section class="section confirmation-section">
+    <div class="container">
+        <div class="confirmation-card reveal">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Booking <span class="gradient-text">Confirmed!</span></h1>
+            <p class="confirmation-subtitle">Your reservation has been successfully placed. A confirmation email will be sent to <strong>{{ booking.email }}</strong>.</p>
+
+            <div class="confirmation-details">
+                <div class="detail-section">
+                    <h3><i class="fas fa-car"></i> Vehicle</h3>
+                    <div class="detail-row">
+                        <span>Car</span>
+                        <strong>{{ booking.car.brand }} {{ booking.car.name }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Category</span>
+                        <strong>{{ booking.car.category }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Daily Rate</span>
+                        <strong>₹{{ "{:,}".format(booking.car.price) }}</strong>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Rental Period</h3>
+                    <div class="detail-row">
+                        <span>Pickup Date</span>
+                        <strong>{{ booking.pickup }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Return Date</span>
+                        <strong>{{ booking.return }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Duration</span>
+                        <strong>{{ booking.days }} day{{ 's' if booking.days > 1 }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Location</span>
+                        <strong>{{ booking.location }}</strong>
+                    </div>
+                </div>
+
+                <div class="detail-section">
+                    <h3><i class="fas fa-user"></i> Customer</h3>
+                    <div class="detail-row">
+                        <span>Name</span>
+                        <strong>{{ booking.name }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Email</span>
+                        <strong>{{ booking.email }}</strong>
+                    </div>
+                    <div class="detail-row">
+                        <span>Phone</span>
+                        <strong>{{ booking.phone }}</strong>
+                    </div>
+                </div>
+
+                <div class="detail-section total-section">
+                    <div class="detail-row total">
+                        <span>Total Amount</span>
+                        <strong>₹{{ "{:,}".format(booking.total) }}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="confirmation-actions">
+                <a href="{{ url_for('home') }}" class="btn btn-outline btn-lg"><i class="fas fa-home"></i> Back to Home</a>
+                <a href="{{ url_for('cars') }}" class="btn btn-primary btn-lg"><i class="fas fa-car"></i> Browse More Cars</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

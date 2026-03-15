@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Contact Us — SuperCars{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Get in <span class="gradient-text">Touch</span></h1>
+        <p>We'd love to hear from you. Reach out anytime.</p>
+    </div>
+</section>
+
+<section class="section contact-section">
+    <div class="container">
+        <div class="contact-grid">
+            <!-- Contact Form -->
+            <div class="contact-form-card reveal">
+                <h2><i class="fas fa-paper-plane"></i> Send a Message</h2>
+                <form method="POST" id="contactForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="contact_name"><i class="fas fa-user"></i> Your Name</label>
+                            <input type="text" id="contact_name" name="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="contact_email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="contact_email" name="email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_subject"><i class="fas fa-tag"></i> Subject</label>
+                        <input type="text" id="contact_subject" name="subject" placeholder="How can we help?" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact_message"><i class="fas fa-comment-alt"></i> Message</label>
+                        <textarea id="contact_message" name="message" rows="5" placeholder="Write your message here..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-paper-plane"></i> Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="contact-info reveal">
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                    <h3>Visit Us</h3>
+                    <p>123 Luxury Drive<br>Bandra West, Mumbai 400050<br>Maharashtra, India</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-phone-alt"></i></div>
+                    <h3>Call Us</h3>
+                    <p>+91 98765 43210<br>+91 91234 56789</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>Email Us</h3>
+                    <p>hello@supercars.com<br>support@supercars.com</p>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-icon"><i class="fas fa-clock"></i></div>
+                    <h3>Working Hours</h3>
+                    <p>Monday – Sunday<br>8:00 AM – 10:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

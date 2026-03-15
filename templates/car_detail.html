@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block title %}{{ car.brand }} {{ car.name }} — SuperCars{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <a href="{{ url_for('cars') }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to Fleet</a>
+        <h1>{{ car.brand }} <span class="gradient-text">{{ car.name }}</span></h1>
+    </div>
+</section>
+
+<section class="section car-detail-section">
+    <div class="container">
+        <div class="car-detail-grid">
+            <!-- Car Image -->
+            <div class="car-detail-image reveal">
+                <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.brand }} {{ car.name }}" class="car-detail-img">
+                <div class="car-detail-badge">{{ car.category }}</div>
+            </div>
+
+            <!-- Car Info -->
+            <div class="car-detail-info reveal">
+                <div class="car-detail-price-row">
+                    <div class="car-detail-rating">
+                        {% for i in range(5) %}
+                        <i class="fas fa-star"></i>
+                        {% endfor %}
+                        <span>{{ car.rating }} / 5.0</span>
+                    </div>
+                    <div class="car-detail-price">
+                        <strong>₹{{ "{:,}".format(car.price) }}</strong>
+                        <span>/day</span>
+                    </div>
+                </div>
+
+                <p class="car-detail-desc">{{ car.description }}</p>
+
+                <div class="car-detail-specs">
+                    <h3>Specifications</h3>
+                    <div class="specs-grid">
+                        <div class="spec-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <span>Seats</span>
+                                <strong>{{ car.seats }}</strong>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fas fa-cog"></i>
+                            <div>
+                                <span>Transmission</span>
+                                <strong>{{ car.transmission }}</strong>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fas fa-gas-pump"></i>
+                            <div>
+                                <span>Fuel Type</span>
+                                <strong>{{ car.fuel }}</strong>
+                            </div>
+                        </div>
+                        <div class="spec-item">
+                            <i class="fas fa-tag"></i>
+                            <div>
+                                <span>Category</span>
+                                <strong>{{ car.category }}</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="car-detail-features">
+                    <h3>Key Features</h3>
+                    <div class="features-list">
+                        {% for feat in car.features %}
+                        <div class="feature-tag"><i class="fas fa-check-circle"></i> {{ feat }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <a href="{{ url_for('booking', car_id=car.id) }}" class="btn btn-primary btn-lg btn-block">
+                    <i class="fas fa-calendar-check"></i> Book This Car
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% block title %}Book {{ car.brand }} {{ car.name }} — SuperCars{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <a href="{{ url_for('car_detail', car_id=car.id) }}" class="back-link"><i class="fas fa-arrow-left"></i> Back to {{ car.brand }} {{ car.name }}</a>
+        <h1>Book <span class="gradient-text">{{ car.brand }} {{ car.name }}</span></h1>
+    </div>
+</section>
+
+<section class="section booking-section">
+    <div class="container">
+        <div class="booking-grid">
+            <!-- Booking Form -->
+            <div class="booking-form-card reveal">
+                <h2><i class="fas fa-calendar-check"></i> Reservation Details</h2>
+                <form method="POST" id="bookingForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name"><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="name" name="name" placeholder="John Doe" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><i class="fas fa-envelope"></i> Email Address</label>
+                            <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone"><i class="fas fa-phone"></i> Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location"><i class="fas fa-map-marker-alt"></i> Pickup Location</label>
+                            <select id="location" name="location" required>
+                                <option value="">Select Location</option>
+                                <option value="Mumbai Airport">Mumbai Airport</option>
+                                <option value="Mumbai Downtown">Mumbai Downtown</option>
+                                <option value="Delhi Airport">Delhi Airport</option>
+                                <option value="Delhi Downtown">Delhi Downtown</option>
+                                <option value="Bangalore Airport">Bangalore Airport</option>
+                                <option value="Bangalore Downtown">Bangalore Downtown</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="pickup_date"><i class="fas fa-calendar"></i> Pickup Date</label>
+                            <input type="date" id="pickup_date" name="pickup_date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="return_date"><i class="fas fa-calendar-alt"></i> Return Date</label>
+                            <input type="date" id="return_date" name="return_date" required>
+                        </div>
+                    </div>
+
+                    <div class="price-estimate" id="priceEstimate" style="display:none;">
+                        <div class="price-row">
+                            <span>Daily Rate</span>
+                            <strong>₹{{ "{:,}".format(car.price) }}</strong>
+                        </div>
+                        <div class="price-row">
+                            <span>Duration</span>
+                            <strong id="durationDays">—</strong>
+                        </div>
+                        <hr>
+                        <div class="price-row total">
+                            <span>Estimated Total</span>
+                            <strong id="totalPrice">—</strong>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        <i class="fas fa-check-circle"></i> Confirm Booking
+                    </button>
+                </form>
+            </div>
+
+            <!-- Car Summary Sidebar -->
+            <div class="booking-summary reveal">
+                <div class="summary-card">
+                    <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.brand }} {{ car.name }}" class="car-card-img">
+                    <div class="summary-info">
+                        <h3>{{ car.brand }} {{ car.name }}</h3>
+                        <div class="car-rating">
+                            {% for i in range(5) %}
+                            <i class="fas fa-star"></i>
+                            {% endfor %}
+                            <span>{{ car.rating }}</span>
+                        </div>
+                        <div class="summary-specs">
+                            <div><i class="fas fa-users"></i> {{ car.seats }} Seats</div>
+                            <div><i class="fas fa-cog"></i> {{ car.transmission }}</div>
+                            <div><i class="fas fa-gas-pump"></i> {{ car.fuel }}</div>
+                        </div>
+                        <div class="summary-price">
+                            <strong>₹{{ "{:,}".format(car.price) }}</strong> <span>/day</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-features">
+                    <h4>Included Features</h4>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Full Insurance Coverage</li>
+                        <li><i class="fas fa-check"></i> Free Cancellation (24h)</li>
+                        <li><i class="fas fa-check"></i> Unlimited Mileage</li>
+                        <li><i class="fas fa-check"></i> 24/7 Roadside Assistance</li>
+                        <li><i class="fas fa-check"></i> Free Delivery & Pickup</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const pickupInput = document.getElementById('pickup_date');
+    const returnInput = document.getElementById('return_date');
+    const priceEstimate = document.getElementById('priceEstimate');
+    const durationDays = document.getElementById('durationDays');
+    const totalPrice = document.getElementById('totalPrice');
+    const dailyRate = {{ car.price }};
+
+    // Set minimum date to today
+    const today = new Date().toISOString().split('T')[0];
+    pickupInput.min = today;
+    returnInput.min = today;
+
+    function updateEstimate() {
+        if (pickupInput.value && returnInput.value) {
+            const pickup = new Date(pickupInput.value);
+            const ret = new Date(returnInput.value);
+            const diffTime = ret - pickup;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) {
+                priceEstimate.style.display = 'block';
+                durationDays.textContent = diffDays + (diffDays === 1 ? ' day' : ' days');
+                totalPrice.textContent = '₹' + (diffDays * dailyRate).toLocaleString('en-IN');
+            } else {
+                priceEstimate.style.display = 'none';
+            }
+        }
+    }
+
+    pickupInput.addEventListener('change', function() {
+        returnInput.min = pickupInput.value;
+        updateEstimate();
+    });
+    returnInput.addEventListener('change', updateEstimate);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}My Bookings — SuperCars{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>My <span class="gradient-text">Bookings</span></h1>
+        <p>View and track all your car reservations</p>
+    </div>
+</section>
+
+<section class="section bookings-section">
+    <div class="container">
+        {% if bookings %}
+        <div class="bookings-list">
+            {% for b in bookings|reverse %}
+            <div class="booking-card reveal {{ 'cancelled' if b.get('status','confirmed') == 'cancelled' }}">
+                <div class="booking-card-image">
+                    <img src="{{ url_for('static', filename='images/' + b.car.image) }}" alt="{{ b.car.brand }} {{ b.car.name }}" class="booking-car-img">
+                    <div class="booking-card-badge">Booking #{{ b.id }}</div>
+                </div>
+                <div class="booking-card-body">
+                    <div class="booking-card-header">
+                        <div>
+                            <h3>{{ b.car.brand }} {{ b.car.name }}</h3>
+                            <span class="booking-category">{{ b.car.category }}</span>
+                        </div>
+                        <div class="booking-total">
+                            <strong>₹{{ "{:,}".format(b.total) }}</strong>
+                            <span>Total</span>
+                        </div>
+                    </div>
+
+                    <div class="booking-details-grid">
+                        <div class="booking-detail">
+                            <i class="fas fa-user"></i>
+                            <div>
+                                <span>Name</span>
+                                <strong>{{ b.name }}</strong>
+                            </div>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <span>Email</span>
+                                <strong>{{ b.email }}</strong>
+                            </div>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <span>Pickup</span>
+                                <strong>{{ b.pickup }}</strong>
+                            </div>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-calendar-alt"></i>
+                            <div>
+                                <span>Return</span>
+                                <strong>{{ b.return }}</strong>
+                            </div>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <span>Location</span>
+                                <strong>{{ b.location }}</strong>
+                            </div>
+                        </div>
+                        <div class="booking-detail">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <span>Duration</span>
+                                <strong>{{ b.days }} day{{ 's' if b.days > 1 }}</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="booking-card-footer">
+                        {% if b.get('status','confirmed') == 'confirmed' %}
+                        <div class="booking-status status-confirmed">
+                            <i class="fas fa-check-circle"></i> Confirmed
+                        </div>
+                        <div class="booking-actions">
+                            <a href="{{ url_for('car_detail', car_id=b.car.id) }}" class="btn btn-outline btn-sm">
+                                <i class="fas fa-eye"></i> View Car
+                            </a>
+                            <a href="{{ url_for('cancel_booking', booking_id=b.id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Cancel this booking? Press OK to confirm cancellation.');">
+                                <i class="fas fa-times-circle"></i> Cancel Booking
+                            </a>
+                        </div>
+                        {% else %}
+                        <div class="booking-status status-cancelled">
+                            <i class="fas fa-times-circle"></i> Cancelled
+                        </div>
+                        <a href="{{ url_for('cars') }}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-car"></i> Book Another
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-bookings reveal">
+            <div class="empty-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <h2>No Bookings Yet</h2>
+            <p>You haven't made any reservations. Browse our fleet and book your dream car!</p>
+            <a href="{{ url_for('cars') }}" class="btn btn-primary btn-lg">
+                <i class="fas fa-car"></i> Explore Fleet
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Our Fleet — SuperCars{% endblock %}
+
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <h1>Our <span class="gradient-text">Fleet</span></h1>
+        <p>Choose from our curated selection of premium vehicles</p>
+    </div>
+</section>
+
+<section class="section cars-section">
+    <div class="container">
+        <!-- Filter Bar -->
+        <div class="filter-bar reveal">
+            <div class="filter-group">
+                <label>Category</label>
+                <div class="filter-buttons" id="categoryFilter">
+                    <a href="{{ url_for('cars', category='all') }}"
+                       class="filter-btn {{ 'active' if selected == 'all' }}">All</a>
+                    {% for cat in categories %}
+                    <a href="{{ url_for('cars', category=cat.lower()) }}"
+                       class="filter-btn {{ 'active' if selected == cat.lower() }}">{{ cat }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Search</label>
+                <div class="search-input">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="carSearch" placeholder="Search by name or brand...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Car Grid -->
+        <div class="car-grid" id="carGrid">
+            {% for car in cars %}
+            <div class="car-card reveal" data-name="{{ car.brand }} {{ car.name }}" data-category="{{ car.category }}">
+                <div class="car-card-image">
+                    <div class="car-card-badge">{{ car.category }}</div>
+                    <img src="{{ url_for('static', filename='images/' + car.image) }}" alt="{{ car.brand }} {{ car.name }}" class="car-card-img">
+                </div>
+                <div class="car-card-body">
+                    <div class="car-card-header">
+                        <div>
+                            <h3>{{ car.brand }} {{ car.name }}</h3>
+                            <div class="car-rating">
+                                {% for i in range(5) %}
+                                <i class="fas fa-star"></i>
+                                {% endfor %}
+                                <span>{{ car.rating }}</span>
+                            </div>
+                        </div>
+                        <div class="car-price">
+                            <strong>₹{{ "{:,}".format(car.price) }}</strong>
+                            <span>/day</span>
+                        </div>
+                    </div>
+                    <div class="car-card-specs">
+                        <div class="spec"><i class="fas fa-users"></i> {{ car.seats }} Seats</div>
+                        <div class="spec"><i class="fas fa-cog"></i> {{ car.transmission }}</div>
+                        <div class="spec"><i class="fas fa-gas-pump"></i> {{ car.fuel }}</div>
+                    </div>
+                    <div class="car-card-actions">
+                        <a href="{{ url_for('car_detail', car_id=car.id) }}" class="btn btn-outline btn-sm">Details</a>
+                        <a href="{{ url_for('booking', car_id=car.id) }}" class="btn btn-primary btn-sm">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="no-results" id="noResults" style="display:none;">
+            <i class="fas fa-search"></i>
+            <h3>No cars found</h3>
+            <p>Try adjusting your search or filter criteria.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
